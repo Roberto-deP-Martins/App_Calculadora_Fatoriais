@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Calculadora Fatoriais</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="spinnerOptions">
+        <item>Permutação</item>
+        <item>Arranjo</item>
+        <item>Permutação com Repetição</item>
+        <item>Arranjo com Repetição</item>
+        <item>Combinação</item>
+    </string-array>
+    <string name="permutacaoText">Pn</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
