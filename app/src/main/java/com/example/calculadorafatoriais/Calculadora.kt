@@ -44,6 +44,7 @@ class Calculadora : Fragment() {
                     0 -> Permutacao()
                     1 -> Arranjo()
                     2 -> PermutacaoRepeticao()
+                    3 -> ArranjoRepeticao()
                     else -> Permutacao()
                  }
                 transaction.replace(R.id.operacaoContainerView, operation)
