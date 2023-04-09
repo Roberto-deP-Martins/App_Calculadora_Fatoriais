@@ -34,7 +34,7 @@ class Arranjo : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentArranjoBinding>(inflater, R.layout.fragment_arranjo, container, false)
-        writeFormula("n", "k")
+        writeFormula("n", "k", 1, 1)
         setUpTextChangeListener(binding.numeradorEditView, binding.nDivisorEditView)
         setUpTextChangeListener(binding.nDivisorEditView, binding.numeradorEditView)
 
@@ -50,16 +50,20 @@ class Arranjo : Fragment() {
                         else binding.nDivisorEditView.text.toString()
                 }
                 val k = if (binding.kDivisorEditView.text.toString() != "") binding.kDivisorEditView.text.toString() else "k"
-                writeFormula(n, k)
+                writeFormula(n, k, n.length, k.length)
             }
         })
 
         return binding.root
     }
 
-    private fun writeFormula(n: String, k: String) {
+    private fun writeFormula(n: String, k: String, _nLength: Int, _kLength: Int) {
+        var nLength = _nLength
+        var kLength = _kLength
+        if (_nLength == 0) nLength += 1
+        if (_kLength == 0) kLength += 1
         val formulaDefString : SpannableString =  SpannableString("A${n},${k} = ")
-        formulaDefString.setSpan(SubscriptSpan(), 1, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        formulaDefString.setSpan(SubscriptSpan(), 1, 2 + nLength + kLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.arranjoTextView.setText(formulaDefString, TextView.BufferType.SPANNABLE)
     }
 
@@ -75,7 +79,7 @@ class Arranjo : Fragment() {
                     affectedView.text = listenedView.text
                     val k = if (binding.kDivisorEditView.text.toString() == "") "k" else binding.kDivisorEditView.text.toString()
                     val n = if (listenedView.text.toString() == "") "n" else listenedView.text.toString()
-                    writeFormula(n, k)
+                    writeFormula(n, k, n.length, k.length)
                 }
             }
         })
