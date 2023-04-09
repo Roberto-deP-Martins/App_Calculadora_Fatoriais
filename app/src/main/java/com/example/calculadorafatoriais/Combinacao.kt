@@ -19,7 +19,7 @@ import com.example.calculadorafatoriais.databinding.FragmentCombinacaoBinding
  * create an instance of this fragment.
  */
 class Combinacao : Fragment() {
-
+    lateinit var binding: FragmentCombinacaoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,19 +30,19 @@ class Combinacao : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentCombinacaoBinding>(inflater, R.layout.fragment_combinacao, container, false)
+        binding = DataBindingUtil.inflate<FragmentCombinacaoBinding>(inflater, R.layout.fragment_combinacao, container, false)
         // binding.numeratorNEditText.addTextChangedListener()
 
-        setUpTextChangeListener(binding.numeratorNEditText, binding.nSubtractionEditText)
-        setUpTextChangeListener(binding.nSubtractionEditText, binding.numeratorNEditText)
-        setUpTextChangeListener(binding.kDivisorEditText, binding.kSubtractionEditText)
-        setUpTextChangeListener(binding.kSubtractionEditText, binding.kDivisorEditText)
+        setUpTextChangeListener(binding.numeratorNEditText, binding.nSubtractionEditText, 'n')
+        setUpTextChangeListener(binding.nSubtractionEditText, binding.numeratorNEditText, 'n')
+        setUpTextChangeListener(binding.kDivisorEditText, binding.kSubtractionEditText, 'k')
+        setUpTextChangeListener(binding.kSubtractionEditText, binding.kDivisorEditText, 'k')
 
         return binding.root
     }
 
     // listenedView é view que receberá listener, affectedView será a view alterada pela função do listener
-    private fun setUpTextChangeListener(listenedView: EditText, affectedView: EditText) {
+    private fun setUpTextChangeListener(listenedView: EditText, affectedView: EditText, mathVariable: Char) {
         listenedView.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
@@ -51,6 +51,10 @@ class Combinacao : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 if (affectedView.text.toString() != listenedView.text.toString()) {
                     affectedView.text = listenedView.text
+                    if (mathVariable == 'n') {
+                        binding.nValueTextView.text = if (affectedView.text.toString() == "") "n" else affectedView.text.toString()
+                    }
+                    else binding.kValueTextView.text = if (affectedView.text.toString() == "") "k" else affectedView.text.toString()
                 }
             }
         })
