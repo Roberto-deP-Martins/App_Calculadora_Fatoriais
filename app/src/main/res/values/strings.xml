@@ -8,6 +8,8 @@
         <item>Arranjo com Repetição</item>
         <item>Combinação</item>
     </string-array>
+    <string name="calculateButtonText">Calcular</string>
+    <string name="explicationButtonText">Ver explicação</string>
     <string name="permutacaoText">Pn</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
