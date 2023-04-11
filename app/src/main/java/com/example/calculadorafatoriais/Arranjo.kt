@@ -16,12 +16,15 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
 import com.example.calculadorafatoriais.databinding.FragmentArranjoBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
 class Arranjo : Fragment() {
+    private val sharedViewModel : SharedViewModel by activityViewModels()
     lateinit var binding : FragmentArranjoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +52,16 @@ class Arranjo : Fragment() {
                     n = if (binding.numeradorEditView.text.toString() != "") binding.numeradorEditView.text.toString()
                         else binding.nDivisorEditView.text.toString()
                 }
-                val k = if (binding.kDivisorEditView.text.toString() != "") binding.kDivisorEditView.text.toString() else "k"
+                lateinit var k: String
+                if (binding.kDivisorEditView.text.toString() != "") {
+                    k = binding.kDivisorEditView.text.toString()
+                    sharedViewModel.k = binding.kDivisorEditView.text.toString().toInt()
+                }
+                else {
+                    k = "k"
+                    sharedViewModel.k = null
+                }
+                Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 writeFormula(n, k, n.length, k.length)
             }
         })
@@ -78,8 +90,17 @@ class Arranjo : Fragment() {
                 if (affectedView.text.toString() != listenedView.text.toString()) {  // Necessário para evitar recursão
                     affectedView.text = listenedView.text
                     val k = if (binding.kDivisorEditView.text.toString() == "") "k" else binding.kDivisorEditView.text.toString()
-                    val n = if (listenedView.text.toString() == "") "n" else listenedView.text.toString()
+                    lateinit var n: String
+                    if (binding.nDivisorEditView.text.toString() != "") {
+                        n = binding.nDivisorEditView.text.toString()
+                        sharedViewModel.n = binding.nDivisorEditView.text.toString().toInt()
+                    }
+                    else {
+                        n = "n"
+                        sharedViewModel.n = null
+                    }
                     writeFormula(n, k, n.length, k.length)
+                    Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 }
             }
         })
