@@ -35,12 +35,11 @@ class Calculadora : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val manager = childFragmentManager
-
+        lateinit var operationFragment : Fragment
         binding.spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                print("a")
                 val transaction = manager.beginTransaction()
-                val operation : Fragment = when (position) {
+                operationFragment = when (position) {
                     0 -> Permutacao()
                     1 -> Arranjo()
                     2 -> PermutacaoRepeticao()
@@ -48,7 +47,7 @@ class Calculadora : Fragment() {
                     4 -> Combinacao()
                     else -> Permutacao()
                  }
-                transaction.replace(R.id.operacaoContainerView, operation)
+                transaction.replace(R.id.operacaoContainerView, operationFragment)
 
                 transaction.commit()
             }

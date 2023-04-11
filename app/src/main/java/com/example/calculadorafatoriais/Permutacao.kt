@@ -25,9 +25,11 @@ class Permutacao : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentPermutacaoBinding>(inflater, R.layout.fragment_permutacao, container, false)
+
         val formulaDefString : SpannableString =  SpannableString("Pn = ")
         formulaDefString.setSpan(SubscriptSpan(), 1, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)  // Permite uso de subscript
         binding.formulaNameTextView.setText(formulaDefString, TextView.BufferType.SPANNABLE)  // Define o spannableString como texto e segundo parâmetro adapta tamanho da view ao mesmo
+
         return binding.root  // Retorna a view raíz
     }
 }
