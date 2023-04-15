@@ -52,15 +52,8 @@ class Arranjo : Fragment() {
                     n = if (binding.numeradorEditView.text.toString() != "") binding.numeradorEditView.text.toString()
                         else binding.nDivisorEditView.text.toString()
                 }
-                lateinit var k: String
-                if (binding.kDivisorEditView.text.toString() != "") {
-                    k = binding.kDivisorEditView.text.toString()
-                    sharedViewModel.k = binding.kDivisorEditView.text.toString().toInt()
-                }
-                else {
-                    k = "k"
-                    sharedViewModel.k = null
-                }
+                val k = binding.kDivisorEditView.text.toString()
+                sharedViewModel.k = if (k == "") null else k.toInt()
                 Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 writeFormula(n, k, n.length, k.length)
             }
@@ -75,11 +68,11 @@ class Arranjo : Fragment() {
         sharedViewModel.k = null
     }
 
-    private fun writeFormula(n: String, k: String, _nLength: Int, _kLength: Int) {
-        var nLength = _nLength
-        var kLength = _kLength
-        if (_nLength == 0) nLength += 1
-        if (_kLength == 0) kLength += 1
+    private fun writeFormula(_n: String, _k: String, _nLength: Int, _kLength: Int) {
+        val n = if (_n != "") _n else "n"
+        val k = if (_k != "") _k else "k"
+        val nLength = if (_nLength != 0) _nLength else 1
+        val kLength = if (_kLength != 0) _kLength else 1
         val formulaDefString : SpannableString =  SpannableString("A${n},${k} = ")
         formulaDefString.setSpan(SubscriptSpan(), 1, 2 + nLength + kLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.arranjoTextView.setText(formulaDefString, TextView.BufferType.SPANNABLE)
@@ -95,16 +88,9 @@ class Arranjo : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 if (affectedView.text.toString() != listenedView.text.toString()) {  // Necessário para evitar recursão
                     affectedView.text = listenedView.text
-                    val k = if (binding.kDivisorEditView.text.toString() == "") "k" else binding.kDivisorEditView.text.toString()
-                    lateinit var n: String
-                    if (binding.nDivisorEditView.text.toString() != "") {
-                        n = binding.nDivisorEditView.text.toString()
-                        sharedViewModel.n = binding.nDivisorEditView.text.toString().toInt()
-                    }
-                    else {
-                        n = "n"
-                        sharedViewModel.n = null
-                    }
+                    val k = binding.kDivisorEditView.text.toString()
+                    val n = binding.nDivisorEditView.text.toString()
+                    sharedViewModel.n = if (n == "") null else n.toInt()
                     writeFormula(n, k, n.length, k.length)
                     Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 }
