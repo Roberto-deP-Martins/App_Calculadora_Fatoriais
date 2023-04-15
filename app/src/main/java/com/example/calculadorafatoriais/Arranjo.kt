@@ -53,7 +53,7 @@ class Arranjo : Fragment() {
                         else binding.nDivisorEditView.text.toString()
                 }
                 val k = binding.kDivisorEditView.text.toString()
-                sharedViewModel.k = if (k == "") null else k.toInt()
+                sharedViewModel.k = k.toULongOrNull()
                 Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 writeFormula(n, k, n.length, k.length)
             }
@@ -98,7 +98,7 @@ class Arranjo : Fragment() {
                     affectedView.text = listenedView.text
                     val k = binding.kDivisorEditView.text.toString()
                     val n = binding.nDivisorEditView.text.toString()
-                    sharedViewModel.n = if (n == "") null else n.toInt()
+                    sharedViewModel.n = n.toULongOrNull()
                     writeFormula(n, k, n.length, k.length)
                     Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 }

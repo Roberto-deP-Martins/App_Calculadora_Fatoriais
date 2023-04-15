@@ -47,7 +47,7 @@ class ArranjoRepeticao : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                sharedViewModel.n = if (s.toString() != "") s.toString().toInt() else null
+                sharedViewModel.n = s.toString().toULongOrNull()
             }
         })
 
@@ -57,7 +57,7 @@ class ArranjoRepeticao : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                sharedViewModel.k = if (s.toString() != "") s.toString().toInt() else null
+                sharedViewModel.k = s.toString().toULongOrNull()
                 Log.d(TAG, "k ${sharedViewModel.k}")
             }
         })
