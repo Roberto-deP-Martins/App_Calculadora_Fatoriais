@@ -64,4 +64,10 @@ class ArranjoRepeticao : Fragment() {
 
         return binding.root
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sharedViewModel.n = null
+        sharedViewModel.k = null
+    }
 }

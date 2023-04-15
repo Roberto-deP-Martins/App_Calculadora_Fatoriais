@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import com.example.calculadorafatoriais.databinding.FragmentCombinacaoBinding
 
 /**
@@ -20,6 +21,8 @@ import com.example.calculadorafatoriais.databinding.FragmentCombinacaoBinding
  */
 class Combinacao : Fragment() {
     lateinit var binding: FragmentCombinacaoBinding
+    val sharedViewModel: SharedViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,6 +44,16 @@ class Combinacao : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sharedViewModel.n = null
+        sharedViewModel.k = null
+    }
+
+    /**
+     * Função responsável por manter múltiplas ocorrências de uma variável, que pode ser n ou k,
+     * iguais dentre as múltiplas editText que as representam
+    */
     // listenedView é view que receberá listener, affectedView será a view alterada pela função do listener
     private fun setUpTextChangeListener(listenedView: EditText, affectedView: EditText, mathVariable: Char) {
         listenedView.addTextChangedListener(object: TextWatcher {

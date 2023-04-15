@@ -65,9 +65,22 @@ class PermutacaoRepeticao : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sharedViewModel.n = null
+        sharedViewModel.k = null
+    }
+
+    /**
+     * Função que altera a textView da fórmula de acordo com valor das variáveis n e k alteradas
+     * pelo usuário
+     */
     private fun writeFormula(_n: String, _k: String, _nLength: Int, _kLength: Int) {
+        /* Caso editText esteja vazio, tornará length 0 da string em 1, considerando que a string
+        vazia será substituída pelo caractere n ou  k */
         val nLength = if (_nLength != 0) _nLength else 1
         val kLength = if (_kLength != 0) _kLength else 1
+
         val n = if (_n != "") _n else "n"
         val k = if (_k != "") _k else "k"
         val firstMathVarStart = 1
