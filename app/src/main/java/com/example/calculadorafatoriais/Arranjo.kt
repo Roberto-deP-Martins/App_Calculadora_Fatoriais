@@ -68,6 +68,10 @@ class Arranjo : Fragment() {
         sharedViewModel.k = null
     }
 
+    /**
+     * Função que altera a textView da fórmula de acordo com valor das variáveis n e k alteradas
+     * pelo usuário
+     */
     private fun writeFormula(_n: String, _k: String, _nLength: Int, _kLength: Int) {
         val n = if (_n != "") _n else "n"
         val k = if (_k != "") _k else "k"
@@ -78,6 +82,10 @@ class Arranjo : Fragment() {
         binding.arranjoTextView.setText(formulaDefString, TextView.BufferType.SPANNABLE)
     }
 
+    /**
+     * Função responsável por manter múltiplas ocorrências de uma variável, que pode ser n ou k,
+     * iguais dentre as múltiplas editText que as representam
+     */
     // listenedView é view que receberá listener, affectedView será a view alterada pela função do listener
     private fun setUpTextChangeListener(listenedView: EditText, affectedView: EditText) {
         listenedView.addTextChangedListener(object: TextWatcher {
