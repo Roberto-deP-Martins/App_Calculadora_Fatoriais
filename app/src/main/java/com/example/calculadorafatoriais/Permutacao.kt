@@ -24,7 +24,7 @@ import com.example.calculadorafatoriais.databinding.FragmentPermutacaoBinding
  * create an instance of this fragment.
  */
 class Permutacao : Fragment() {
-    val viewModel: SharedViewModel by activityViewModels()
+    val sharedViewModel: SharedViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,12 +39,18 @@ class Permutacao : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                viewModel.n = if (s.toString() == "") null else s.toString().toInt()
-                Log.d(TAG, "viewModel n ${viewModel.n}")
+                sharedViewModel.n = if (s.toString() == "") null else s.toString().toInt()
+                Log.d(TAG, "viewModel n ${sharedViewModel.n}")
             }
 
         })
 
         return binding.root  // Retorna a view raíz
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sharedViewModel.n = null
+        Log.d(TAG, "n = ${sharedViewModel.n}")
     }
 }

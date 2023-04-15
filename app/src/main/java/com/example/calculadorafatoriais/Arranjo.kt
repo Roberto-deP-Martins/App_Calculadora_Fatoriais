@@ -69,6 +69,12 @@ class Arranjo : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sharedViewModel.n = null
+        sharedViewModel.k = null
+    }
+
     private fun writeFormula(n: String, k: String, _nLength: Int, _kLength: Int) {
         var nLength = _nLength
         var kLength = _kLength
