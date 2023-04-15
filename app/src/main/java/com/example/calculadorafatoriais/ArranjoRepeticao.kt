@@ -1,9 +1,13 @@
 package com.example.calculadorafatoriais
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.style.SubscriptSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import com.example.calculadorafatoriais.databinding.FragmentArranjoRepeticaoBinding
 import com.example.calculadorafatoriais.databinding.FragmentPermutacaoRepeticaoBinding
 
@@ -20,6 +25,7 @@ import com.example.calculadorafatoriais.databinding.FragmentPermutacaoRepeticaoB
  * create an instance of this fragment.
  */
 class ArranjoRepeticao : Fragment() {
+    val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +41,27 @@ class ArranjoRepeticao : Fragment() {
         formulaDefString.setSpan(SubscriptSpan(), 1, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.arranjoRepDefTextView.setText(formulaDefString, TextView.BufferType.SPANNABLE)
 
-        binding.baseEditTextNumber.setOnClickListener { removeEditTextBackground(binding.baseEditTextNumber) }
-        binding.exponentEditTextNumber.setOnClickListener { removeEditTextBackground(binding.exponentEditTextNumber) }
+        binding.baseEditTextNumber.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                sharedViewModel.n = if (s.toString() != "") s.toString().toInt() else null
+            }
+        })
+
+        binding.exponentEditTextNumber.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                sharedViewModel.k = if (s.toString() != "") s.toString().toInt() else null
+                Log.d(TAG, "k ${sharedViewModel.k}")
+            }
+        })
+
         return binding.root
     }
-
-    private fun removeEditTextBackground(view: EditText) { view.background = null }
 }
