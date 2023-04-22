@@ -11,6 +11,10 @@
     <string name="calculateButtonText">Calcular</string>
     <string name="explicationButtonText">Ver explicação</string>
     <string name="permutacaoText">Pn</string>
+    <string name="nVariableNotWritten">Variável n não foi digitada!</string>
+    <string name="kVariableNotWritten">Variável k não foi digitada!</string>
+    <string name="showResult">O resultado é %1$s</string>
+    <string name="integerOverflow">Não conseguimos realizar a operação. (Integer Overflow)</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
