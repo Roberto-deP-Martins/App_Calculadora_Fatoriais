@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Calculadora Fatoriais</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="spinner">Operação:</string>
     <string-array name="spinnerOptions">
         <item>Permutação</item>
         <item>Arranjo</item>

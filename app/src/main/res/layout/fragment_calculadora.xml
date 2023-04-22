@@ -23,9 +23,10 @@
             android:layout_marginTop="16dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:text="TextView"
+            android:text="@string/spinner"
             app:layout_constraintEnd_toStartOf="@+id/spinner"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
