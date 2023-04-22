@@ -90,6 +90,7 @@ class Calculadora : Fragment() {
         if (result != null) {  // Mostra resultado
             binding.resultadoTextView.text = getString(R.string.showResult, result)
             binding.resultadoTextView.visibility = View.VISIBLE
+            binding.explanationButton.visibility = View.VISIBLE
         }
         else { Toast.makeText(context, this.getString(R.string.integerOverflow), Toast.LENGTH_LONG).show() }  // Overflow
     }

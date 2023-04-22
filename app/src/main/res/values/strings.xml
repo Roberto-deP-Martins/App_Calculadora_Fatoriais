@@ -9,7 +9,6 @@
         <item>Combinação</item>
     </string-array>
     <string name="calculateButtonText">Calcular</string>
-    <string name="explicationButtonText">Ver explicação</string>
     <string name="permutacaoText">Pn</string>
     <string name="nVariableNotWritten">Variável n não foi digitada!</string>
     <string name="kVariableNotWritten">Variável k não foi digitada!</string>
