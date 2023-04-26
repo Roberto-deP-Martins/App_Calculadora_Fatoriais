@@ -84,7 +84,14 @@ class Calculadora : Fragment() {
                     4 -> ::combinacao
                     else -> null
                 }
-                if (operation != null) { result = operation(sharedViewModel.n!!, sharedViewModel.k!!) }
+                if (operation != null) {
+                    if ((operation != ::arranjoRepeticao) && (sharedViewModel.k!! > sharedViewModel.n!!)) {
+                        Toast.makeText(context, this.getString(R.string.kBiggerThanN), Toast.LENGTH_LONG).show()  // k > n e operação não é arranjo com repetição
+                    }
+                    else {
+                        result = operation(sharedViewModel.n!!, sharedViewModel.k!!)
+                    }
+                }
             }
         }
         if (result != null) {  // Mostra resultado

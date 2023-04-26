@@ -14,6 +14,7 @@
     <string name="kVariableNotWritten">Variável k não foi digitada!</string>
     <string name="showResult">O resultado é %1$s</string>
     <string name="integerOverflow">Não conseguimos realizar a operação. (Integer Overflow)</string>
+    <string name="kBiggerThanN">O valor de k não pode ser maior que o de n</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
