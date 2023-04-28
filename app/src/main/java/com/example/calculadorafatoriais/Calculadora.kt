@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.example.calculadorafatoriais.combinatorics.*
 import com.example.calculadorafatoriais.databinding.FragmentCalculadoraBinding
 
@@ -30,6 +31,7 @@ class Calculadora : Fragment() {
 
     lateinit var binding: FragmentCalculadoraBinding
     val sharedViewModel: SharedViewModel by activityViewModels()
+    var result: ULong? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +40,7 @@ class Calculadora : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentCalculadoraBinding>(inflater, R.layout.fragment_calculadora, container, false)
         binding.calcularButton.setOnClickListener { calculate() }
+        binding.explanationButton.setOnClickListener { view?.findNavController()?.navigate(CalculadoraDirections.actionCalculadoraToExplanationFragment(binding.spinner.selectedItemPosition, result.toString())) }
         return binding.root
     }
 
@@ -57,16 +60,13 @@ class Calculadora : Fragment() {
                     else -> Permutacao()
                  }
                 transaction.replace(R.id.operacaoContainerView, operationFragment)
-
                 transaction.commit()
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
-    fun calculate() {
-        var result: ULong? = null
+    private fun calculate() {
         if (sharedViewModel.n == null) {
             Toast.makeText(context, this.getString(R.string.nVariableNotWritten), Toast.LENGTH_LONG).show()
         }
