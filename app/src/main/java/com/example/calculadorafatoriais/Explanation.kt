@@ -28,7 +28,7 @@ class Explanation : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentExplanationBinding.inflate(inflater, container, false)
         val args = ExplanationArgs.fromBundle(requireArguments())
-        val operationsArray = resources.getStringArray(R.array.spinnerOptions)
+        val operationsArray = resources.getStringArray(R.array.spinnerOptions).map { it.lowercase() }
         val operationName = when (args.operation) {
             0 -> operationsArray[0]
             1 -> operationsArray[1]
@@ -37,10 +37,10 @@ class Explanation : Fragment() {
             4 -> operationsArray[4]
             else -> operationsArray[0]
         }
-        binding.explanationIntro.text = getString(R.string.explanationIntro, operationName)
+        binding.explanationIntro.text = getString(R.string.explanationIntro, "$operationName:")
         binding.formulaPresentation.addView(when (args.operation) {
             0 -> writePermutation(this.requireContext())
-            else -> null
+            else -> writePermutation(this.requireContext())
         })
         return binding.root
     }
