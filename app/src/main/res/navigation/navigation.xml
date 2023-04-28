@@ -9,5 +9,20 @@
         android:id="@+id/calculadora"
         android:name="com.example.calculadorafatoriais.Calculadora"
         android:label="fragment_calculadora"
-        tools:layout="@layout/fragment_calculadora" />
+        tools:layout="@layout/fragment_calculadora" >
+        <action
+            android:id="@+id/action_calculadora_to_explanationFragment"
+            app:destination="@id/explanationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/explanationFragment"
+        android:name="com.example.calculadorafatoriais.Explanation"
+        android:label="fragment_explanation"
+        tools:layout="@layout/fragment_explanation" >
+        <argument
+            android:name="operation"
+            app:argType="integer" />
+        <argument android:name="result"
+            app:argType="string" />
+    </fragment>
 </navigation>
