@@ -40,7 +40,13 @@ class Calculadora : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentCalculadoraBinding>(inflater, R.layout.fragment_calculadora, container, false)
         binding.calcularButton.setOnClickListener { calculate() }
-        binding.explanationButton.setOnClickListener { view?.findNavController()?.navigate(CalculadoraDirections.actionCalculadoraToExplanationFragment(binding.spinner.selectedItemPosition, result.toString())) }
+        binding.explanationButton.setOnClickListener {
+            view?.findNavController()?.navigate(CalculadoraDirections.actionCalculadoraToExplanationFragment(
+                binding.spinner.selectedItemPosition,
+                result.toString()
+                )
+            )
+        }
         return binding.root
     }
 
