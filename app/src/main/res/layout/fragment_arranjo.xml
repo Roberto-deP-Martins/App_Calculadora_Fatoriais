@@ -78,7 +78,7 @@
                     android:textSize="24sp" />
 
                 <EditText
-                    android:id="@+id/nDivisorEditView"
+                    android:id="@+id/nDenominatorEditView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -98,7 +98,7 @@
                     android:textSize="24sp" />
 
                 <EditText
-                    android:id="@+id/kDivisorEditView"
+                    android:id="@+id/kDenominatorEditView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

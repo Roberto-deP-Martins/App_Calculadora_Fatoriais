@@ -103,14 +103,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/divisorLayout"
+                android:id="@+id/denominatorLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/fraction_symbol"
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/kDivisorEditText"
+                    android:id="@+id/kDenominatorEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

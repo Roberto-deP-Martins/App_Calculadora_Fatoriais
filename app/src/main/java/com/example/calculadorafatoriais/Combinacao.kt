@@ -38,8 +38,8 @@ class Combinacao : Fragment() {
 
         setUpTextChangeListener(binding.numeratorNEditText, binding.nSubtractionEditText, 'n')
         setUpTextChangeListener(binding.nSubtractionEditText, binding.numeratorNEditText, 'n')
-        setUpTextChangeListener(binding.kDivisorEditText, binding.kSubtractionEditText, 'k')
-        setUpTextChangeListener(binding.kSubtractionEditText, binding.kDivisorEditText, 'k')
+        setUpTextChangeListener(binding.kDenominatorEditText, binding.kSubtractionEditText, 'k')
+        setUpTextChangeListener(binding.kSubtractionEditText, binding.kDenominatorEditText, 'k')
 
         return binding.root
     }

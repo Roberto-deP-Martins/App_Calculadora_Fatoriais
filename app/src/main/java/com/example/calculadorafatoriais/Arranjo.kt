@@ -38,21 +38,21 @@ class Arranjo : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate<FragmentArranjoBinding>(inflater, R.layout.fragment_arranjo, container, false)
         writeFormula("n", "k", 1, 1)
-        setUpTextChangeListener(binding.numeradorEditView, binding.nDivisorEditView)
-        setUpTextChangeListener(binding.nDivisorEditView, binding.numeradorEditView)
+        setUpTextChangeListener(binding.numeradorEditView, binding.nDenominatorEditView)
+        setUpTextChangeListener(binding.nDenominatorEditView, binding.numeradorEditView)
 
-        binding.kDivisorEditView.addTextChangedListener(object: TextWatcher {
+        binding.kDenominatorEditView.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
             override fun afterTextChanged(s: Editable?) {
                 var n = "n"
                 /* variável n tem valor "n" se nenhum editText com valor de n tiver sido preenchido,
                 caso contrário, terá valor do campo */
-                if (binding.numeradorEditView.text.toString() != "" || binding.nDivisorEditView.text.toString() != "") {
+                if (binding.numeradorEditView.text.toString() != "" || binding.nDenominatorEditView.text.toString() != "") {
                     n = if (binding.numeradorEditView.text.toString() != "") binding.numeradorEditView.text.toString()
-                        else binding.nDivisorEditView.text.toString()
+                        else binding.nDenominatorEditView.text.toString()
                 }
-                val k = binding.kDivisorEditView.text.toString()
+                val k = binding.kDenominatorEditView.text.toString()
                 sharedViewModel.k = k.toULongOrNull()
                 Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
                 writeFormula(n, k, n.length, k.length)
@@ -96,8 +96,8 @@ class Arranjo : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 if (affectedView.text.toString() != listenedView.text.toString()) {  // Necessário para evitar recursão
                     affectedView.text = listenedView.text
-                    val k = binding.kDivisorEditView.text.toString()
-                    val n = binding.nDivisorEditView.text.toString()
+                    val k = binding.kDenominatorEditView.text.toString()
+                    val n = binding.nDenominatorEditView.text.toString()
                     sharedViewModel.n = n.toULongOrNull()
                     writeFormula(n, k, n.length, k.length)
                     Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
