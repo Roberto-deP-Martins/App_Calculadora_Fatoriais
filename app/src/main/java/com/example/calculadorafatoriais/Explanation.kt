@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.calculadorafatoriais.databinding.FragmentExplanationBinding
 
@@ -30,21 +30,21 @@ class Explanation : Fragment() {
         val args = ExplanationArgs.fromBundle(requireArguments())
         val operationsArray = resources.getStringArray(R.array.spinnerOptions).map { it.lowercase() }
         val operationName = when (args.operation) {
-            0 -> operationsArray[0]
-            1 -> operationsArray[1]
-            2 -> operationsArray[2]
-            3 -> operationsArray[3]
-            4 -> operationsArray[4]
+            0 -> operationsArray[0]  // Permutação
+            1 -> operationsArray[1]  // Arranjo
+            2 -> operationsArray[2]  // Permutação com Repetição
+            3 -> operationsArray[3]  // Arranjo com Repetição
+            4 -> operationsArray[4]  // Combinação
             else -> operationsArray[0]
         }
         binding.explanationIntro.text = getString(R.string.explanationIntro, "$operationName:")
         binding.formulaPresentation.addView(when (args.operation) {
             0 -> writePermutation(this.requireContext())
+            1 -> writeArranjo(this.requireContext())
             else -> writePermutation(this.requireContext())
         })
         return binding.root
     }
-
 }
 
 private fun dpToPx(context: Context): Int {
@@ -52,22 +52,54 @@ private fun dpToPx(context: Context): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20F, r.displayMetrics).toInt()
 }
 
-private fun writePermutation(context: Context,n: String = "n"): LinearLayout {
-    val linearLayout = LinearLayout(context)
-    linearLayout.orientation = LinearLayout.HORIZONTAL
+private fun configureLayoutParams(context: Context): ActionBar.LayoutParams {  // Configura margem do LinearLayout
     val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT)
     val px = dpToPx(context)
     params.setMargins(px, px, 0, 0)
-    linearLayout.layoutParams = params
+    return params
+}
 
-    val formulaText = TextView(context)
+private fun createFormulaDefTextView(context: Context, text: String, spanStart: Int, spanEnd: Int): TextView {
+    val textView = TextView(context)
+    val formulaDefString = SpannableString(text)
+    formulaDefString.setSpan(SubscriptSpan(), spanStart, spanEnd, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+    textView.setText(formulaDefString, TextView.BufferType.SPANNABLE)
+    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
+    return textView
+}
 
-    // Configurando texto para formulaNameText
-    val formulaDefString = SpannableString("Pn = ${n}!")
-    formulaDefString.setSpan(SubscriptSpan(), 1, 2, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
-    formulaText.setText(formulaDefString, TextView.BufferType.SPANNABLE)
-    formulaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
+private fun createFormulaPartTextView(context: Context, text: String, background: Int? = null): TextView {
+    val textView = TextView(context)
+    textView.text = text
+    textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
+    if (background != null) textView.background = ContextCompat.getDrawable(context, background)
+    return textView
+}
 
-    linearLayout.addView(formulaText)
+private fun writePermutation(context: Context,n: String = "n"): LinearLayout {
+    val linearLayout = LinearLayout(context)
+    linearLayout.orientation = LinearLayout.HORIZONTAL
+    linearLayout.layoutParams = configureLayoutParams(context)
+    linearLayout.addView(createFormulaDefTextView(context, "Pn = $n!", 1, 2))
     return linearLayout
+}
+
+private fun writeArranjo(context: Context, n: String = "n", k: String = "k") : LinearLayout {
+    val linearLayout = LinearLayout(context)
+    linearLayout.orientation = LinearLayout.HORIZONTAL
+    linearLayout.layoutParams = configureLayoutParams(context)
+
+    val formulaName = createFormulaDefTextView(context, "An,k = ", 1, 4)
+    linearLayout.addView(formulaName)
+    val formulaDefLayout = LinearLayout(context)  // LinearLayout que contém o numerador e denominador da fórmula
+    formulaDefLayout.orientation = LinearLayout.VERTICAL
+    val numeratorTextView = createFormulaPartTextView(context, "n!")
+    val denominatorTextView = createFormulaPartTextView(context, "(n - k)!", R.drawable.fraction_symbol)
+    formulaDefLayout.addView(numeratorTextView)
+    formulaDefLayout.addView(denominatorTextView)
+
+    linearLayout.addView(formulaDefLayout)
+    return linearLayout
+
 }
