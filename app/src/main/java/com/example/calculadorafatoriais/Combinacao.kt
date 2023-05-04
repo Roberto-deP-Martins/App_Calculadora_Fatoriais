@@ -66,10 +66,10 @@ class Combinacao : Fragment() {
                     affectedView.text = listenedView.text
                     if (mathVariable == 'n') {
                         binding.nValueTextView.text = if (affectedView.text.toString() == "") "n" else affectedView.text.toString()
-                        sharedViewModel.n = affectedView.text.toString().toULongOrNull()
+                        sharedViewModel.n = affectedView.text.toString().toIntOrNull()
                     }
                     else binding.kValueTextView.text = if (affectedView.text.toString() == "") "k" else affectedView.text.toString()
-                    sharedViewModel.k = affectedView.text.toString().toULongOrNull()
+                    sharedViewModel.k = affectedView.text.toString().toIntOrNull()
                 }
             }
         })

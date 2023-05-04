@@ -40,8 +40,7 @@ class Permutacao : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && s.length in 2..4) { binding.valorEditText.setEms(s.length) }
-                sharedViewModel.n = s.toString().toULongOrNull()
-                Log.d(TAG, "viewModel n ${sharedViewModel.n}")
+                sharedViewModel.n = s.toString().toIntOrNull()
             }
 
         })

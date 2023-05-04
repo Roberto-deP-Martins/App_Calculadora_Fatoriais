@@ -3,6 +3,6 @@ package com.example.calculadorafatoriais
 import androidx.lifecycle.ViewModel
 
 class SharedViewModel : ViewModel() {
-    var n: ULong? = null
-    var k: ULong? = null
+    var n: Int? = null
+    var k: Int? = null
 }

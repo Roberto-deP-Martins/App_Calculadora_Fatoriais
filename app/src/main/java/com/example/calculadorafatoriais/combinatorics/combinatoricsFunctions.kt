@@ -6,10 +6,10 @@ private fun multiplicationOverflows(a: ULong, b: ULong, result: ULong): Boolean 
 
 /* rangeEnd permite diminuir tamanho da operação quando se usa a função em outras operações de
 combinatória (semelhante a cortar números em contas no papel) evitando overflow desnecessário */
-fun permutacao(n: ULong, rangeEnd: ULong = 1UL): ULong? {
-    if (n == 0UL || n == 1UL) { return 1UL }
-    var result: ULong = n
-    for (i in (n - 1UL).downTo(rangeEnd + 1UL)) {
+fun permutacao(n: Int, rangeEnd: Int = 1): ULong? {
+    if (n == 0 || n == 1) { return 1UL }
+    var result: ULong = n.toULong()
+    for (i in ((n - 1).toULong()).downTo((rangeEnd + 1).toULong())) {
         val resultBeforeMultiplication = result
         result *= i
         if (multiplicationOverflows(resultBeforeMultiplication, i, result)) {
@@ -19,27 +19,27 @@ fun permutacao(n: ULong, rangeEnd: ULong = 1UL): ULong? {
     return result
 }
 
-fun permutacaoRepeticao(n: ULong,k: ULong): ULong? {
+fun permutacaoRepeticao(n: Int,k: Int): ULong? {
     return permutacao(n, k)
 }
 
-fun arranjo(n: ULong, k: ULong): ULong? {
+fun arranjo(n: Int, k: Int): ULong? {
     return permutacao(n, n - k)
 }
 
-fun arranjoRepeticao(n:ULong,k: ULong): ULong? {
+fun arranjoRepeticao(n:Int,k: Int): ULong? {
     var result = 1UL
-    for (i in 1UL..k) {
+    for (i in 1UL..k.toULong()) {
         val currNum = result
-        result *= n
-        if (multiplicationOverflows(n, currNum, result)) {
+        result *= n.toULong()
+        if (multiplicationOverflows(n.toULong(), currNum, result)) {
             return null
         }
     }
     return result
 }
 
-fun combinacao(n:ULong,k:ULong): ULong? {
+fun combinacao(n:Int,k:Int): ULong? {
     var numerator: ULong? = null
     var divisor: ULong? = null
     if (k > n - k) {
