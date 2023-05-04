@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.SpannedString
 import android.text.style.SubscriptSpan
+import android.text.style.SuperscriptSpan
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -40,8 +41,13 @@ class Explanation : Fragment() {
         binding.explanationIntro.text = getString(R.string.explanationIntro, "$operationName:")
         binding.formulaPresentation.addView(when (args.operation) {
             0 -> writePermutation(this.requireContext())
-            1 -> writeArranjo(this.requireContext())
-            else -> writePermutation(this.requireContext())
+            3 -> writeArranjo(this.requireContext())
+            else -> writeFormulaWithFraction(this.requireContext(), args.operation)
+        })
+        binding.formulaWithValues.addView(when (args.operation) {
+            0 -> writePermutation(this.requireContext(), args.n)
+            3 -> writeArranjo(this.requireContext(), args.n, args.k)
+            else -> writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k)
         })
         return binding.root
     }
@@ -59,10 +65,11 @@ private fun configureLayoutParams(context: Context): ActionBar.LayoutParams {  /
     return params
 }
 
-private fun createFormulaDefTextView(context: Context, text: String, spanStart: Int, spanEnd: Int): TextView {
+private fun createFormulaDefTextView(context: Context, text: String, spanStart: Int, spanEnd: Int, isArranjo: Boolean = false): TextView {
     val textView = TextView(context)
     val formulaDefString = SpannableString(text)
-    formulaDefString.setSpan(SubscriptSpan(), spanStart, spanEnd, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+    val spanType = if (isArranjo) SuperscriptSpan() else SubscriptSpan()
+    formulaDefString.setSpan(spanType, spanStart, spanEnd, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
     textView.setText(formulaDefString, TextView.BufferType.SPANNABLE)
     textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
     return textView
@@ -78,28 +85,45 @@ private fun createFormulaPartTextView(context: Context, text: String, background
 }
 
 private fun writePermutation(context: Context,n: String = "n"): LinearLayout {
-    val linearLayout = LinearLayout(context)
-    linearLayout.orientation = LinearLayout.HORIZONTAL
-    linearLayout.layoutParams = configureLayoutParams(context)
-    linearLayout.addView(createFormulaDefTextView(context, "Pn = $n!", 1, 2))
-    return linearLayout
+    val formulaParentLayout = LinearLayout(context)
+    formulaParentLayout.orientation = LinearLayout.HORIZONTAL
+    formulaParentLayout.layoutParams = configureLayoutParams(context)
+    formulaParentLayout.addView(createFormulaDefTextView(context, "P$n = $n!", 1, 1 + n.length))
+    return formulaParentLayout
 }
 
-private fun writeArranjo(context: Context, n: String = "n", k: String = "k") : LinearLayout {
-    val linearLayout = LinearLayout(context)
-    linearLayout.orientation = LinearLayout.HORIZONTAL
-    linearLayout.layoutParams = configureLayoutParams(context)
+private fun writeArranjo(context: Context, n: String = "n", k: String = "k"): LinearLayout {
+    val formulaParentLayout = LinearLayout(context)
+    formulaParentLayout.orientation = LinearLayout.HORIZONTAL
+    formulaParentLayout.layoutParams = configureLayoutParams(context)
+    formulaParentLayout.addView(createFormulaDefTextView(context, "Ar = $n$k", 5 + n.length, 5 + n.length + k.length, true))
+    return formulaParentLayout
+}
 
-    val formulaName = createFormulaDefTextView(context, "An,k = ", 1, 4)
-    linearLayout.addView(formulaName)
+private fun writeFormulaWithFraction(context: Context, opeationType: Int, n: String = "n", k: String = "k"): LinearLayout {
+    val formulaParentLayout = LinearLayout(context)
+    formulaParentLayout.orientation = LinearLayout.HORIZONTAL
+    formulaParentLayout.layoutParams = configureLayoutParams(context)
+
+    val formulaNameString = when (opeationType) {
+        1 -> "A$n,$k = "
+        2 -> "P$n,$k = "
+        else -> "C$n,$k = "
+    }
+    val formulaNameView = createFormulaDefTextView(context, formulaNameString, 1, n.length + k.length + 2)
+    formulaParentLayout.addView(formulaNameView)
     val formulaDefLayout = LinearLayout(context)  // LinearLayout que contém o numerador e denominador da fórmula
     formulaDefLayout.orientation = LinearLayout.VERTICAL
-    val numeratorTextView = createFormulaPartTextView(context, "n!")
-    val denominatorTextView = createFormulaPartTextView(context, "(n - k)!", R.drawable.fraction_symbol)
+    val numeratorTextView = createFormulaPartTextView(context, "$n!")
+    val denominatorString = when (opeationType) {
+        1 -> "($n - $k)!"
+        2 -> "$k!"
+        else -> "$k!($n - $k)!"
+    }
+    val denominatorTextView = createFormulaPartTextView(context, denominatorString, R.drawable.fraction_symbol)
     formulaDefLayout.addView(numeratorTextView)
     formulaDefLayout.addView(denominatorTextView)
 
-    linearLayout.addView(formulaDefLayout)
-    return linearLayout
-
+    formulaParentLayout.addView(formulaDefLayout)
+    return formulaParentLayout
 }
