@@ -1,7 +1,9 @@
 package com.example.calculadorafatoriais
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +45,9 @@ class Calculadora : Fragment() {
         binding.explanationButton.setOnClickListener {
             view?.findNavController()?.navigate(CalculadoraDirections.actionCalculadoraToExplanationFragment(
                 binding.spinner.selectedItemPosition,
-                result.toString()
+                result.toString(),
+                sharedViewModel.n.toString(),
+                sharedViewModel.k.toString()
                 )
             )
         }
@@ -70,6 +74,13 @@ class Calculadora : Fragment() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    override fun onPause() {  // Executa quando se navega para outro fragment
+        super.onPause()
+        sharedViewModel.n = null
+        sharedViewModel.k = null
+        result = null
     }
 
     private fun calculate() {
@@ -99,12 +110,13 @@ class Calculadora : Fragment() {
                     }
                 }
             }
+            if (result != null) {  // Mostra resultado
+                binding.resultadoTextView.text = getString(R.string.showResult, result)
+                binding.resultadoTextView.visibility = View.VISIBLE
+                binding.explanationButton.visibility = View.VISIBLE
+            }
+            else {
+                Toast.makeText(context, this.getString(R.string.integerOverflow), Toast.LENGTH_LONG).show() }  // Overflow
+            }
         }
-        if (result != null) {  // Mostra resultado
-            binding.resultadoTextView.text = getString(R.string.showResult, result)
-            binding.resultadoTextView.visibility = View.VISIBLE
-            binding.explanationButton.visibility = View.VISIBLE
-        }
-        else { Toast.makeText(context, this.getString(R.string.integerOverflow), Toast.LENGTH_LONG).show() }  // Overflow
-    }
 }
