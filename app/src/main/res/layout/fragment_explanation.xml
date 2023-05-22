@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/linear_layout_separator"
             android:orientation="vertical"
-            android:paddingBottom="18dp">
+            android:paddingBottom="@dimen/layoutPadding">
 
             <TextView
                 android:id="@+id/explanationIntro"
@@ -31,7 +32,9 @@
             android:id="@+id/formulaWithValues"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@drawable/linear_layout_separator"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/layoutPadding">
 
             <TextView
                 android:id="@+id/formulaValuesIntro"
@@ -44,9 +47,12 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/developmentLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@drawable/linear_layout_separator"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/layoutPadding">
 
             <TextView
                 android:id="@+id/textView6"
@@ -54,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/text_margin"
                 android:layout_marginTop="@dimen/text_margin"
-                android:text="TextView"
+                android:text="@string/developingFormula"
                 android:textSize="@dimen/explanationFontSize" />
         </LinearLayout>
     </LinearLayout>

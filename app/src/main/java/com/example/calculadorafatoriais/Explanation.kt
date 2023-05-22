@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import com.example.calculadorafatoriais.databinding.FragmentExplanationBinding
 
@@ -49,13 +50,37 @@ class Explanation : Fragment() {
             3 -> writeArranjo(this.requireContext(), args.n, args.k)
             else -> writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k)
         })
+        binding.developmentLayout.addView(when (args.operation) {
+            0 -> writePermutation(this.requireContext(), args.n, true)
+            3 -> writeArranjo(this.requireContext(), args.n, args.k)  // TODO:
+            else -> writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k)  // TODO:
+        })
         return binding.root
     }
+}
+
+/**
+* Retorna uma string que representa uma sequência de multiplicações que vai de rangeStart até
+ * rangeEnd de forma decrescente.
+*  */
+private fun multiplicationSeriesString(rangeStart: Int, rangeEnd: Int): String {
+    var seriesText = ""
+    for (i in rangeStart downTo rangeEnd) {  // Printa sequência de valores multiplicadas no fatorial
+        seriesText += if (i != 1) "$i x " else "$i"
+    }
+    return seriesText
 }
 
 private fun dpToPx(context: Context): Int {
     val r: Resources = context.resources
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20F, r.displayMetrics).toInt()
+}
+
+private fun createParentLinearLayout(context: Context): LinearLayout {
+    val linearLayout = LinearLayout(context)
+    linearLayout.orientation = LinearLayout.HORIZONTAL
+    linearLayout.layoutParams = configureLayoutParams(context)
+    return linearLayout
 }
 
 private fun configureLayoutParams(context: Context): ActionBar.LayoutParams {  // Configura margem do LinearLayout
@@ -84,27 +109,33 @@ private fun createFormulaPartTextView(context: Context, text: String, background
     return textView
 }
 
-private fun writePermutation(context: Context,n: String = "n"): LinearLayout {
-    val formulaParentLayout = LinearLayout(context)
-    formulaParentLayout.orientation = LinearLayout.HORIZONTAL
-    formulaParentLayout.layoutParams = configureLayoutParams(context)
-    formulaParentLayout.addView(createFormulaDefTextView(context, "P$n = $n!", 1, 1 + n.length))
+private fun writePermutation(context: Context,n: String = "n", isDeveloping:Boolean = false): LinearLayout {
+    val formulaParentLayout = createParentLinearLayout(context)
+    var text = "P$n = "
+    if (!isDeveloping || !n.isDigitsOnly()) {  // Será executado antes do passo de desevolvimento da expressão
+        text += "$n!"
+    }
+    else {  // Será executado no passo de desevolvimento
+        text += "$n x "
+        if (n.toInt() > 5) {  // Mostra primeiro item da sequência seguido de reticências para indicar outras multiplicações e depois a sequência
+            text = text + "${(n.toInt() - 1)} x ... x " + multiplicationSeriesString(3, 1)
+        }
+        else {  // Printa sequência de valores multiplicadas no fatorial
+            text += multiplicationSeriesString(n.toInt() - 1, 1)
+        }
+    }
+    formulaParentLayout.addView(createFormulaDefTextView(context, text, 1, 1 + n.length))
     return formulaParentLayout
 }
 
 private fun writeArranjo(context: Context, n: String = "n", k: String = "k"): LinearLayout {
-    val formulaParentLayout = LinearLayout(context)
-    formulaParentLayout.orientation = LinearLayout.HORIZONTAL
-    formulaParentLayout.layoutParams = configureLayoutParams(context)
+    val formulaParentLayout = createParentLinearLayout(context)
     formulaParentLayout.addView(createFormulaDefTextView(context, "Ar = $n$k", 5 + n.length, 5 + n.length + k.length, true))
     return formulaParentLayout
 }
 
 private fun writeFormulaWithFraction(context: Context, opeationType: Int, n: String = "n", k: String = "k"): LinearLayout {
-    val formulaParentLayout = LinearLayout(context)
-    formulaParentLayout.orientation = LinearLayout.HORIZONTAL
-    formulaParentLayout.layoutParams = configureLayoutParams(context)
-
+    val formulaParentLayout = createParentLinearLayout(context)
     val formulaNameString = when (opeationType) {
         1 -> "A$n,$k = "
         2 -> "P$n,$k = "

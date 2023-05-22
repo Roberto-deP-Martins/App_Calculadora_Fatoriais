@@ -17,4 +17,5 @@
     <string name="kBiggerThanN">O valor de k não pode ser maior que o de n</string>
     <string name="explanationIntro">Primeiro escreve-se a fórmula de %1$s</string>
     <string name="explanationValuesStep">Então, adicionam-se os valores:</string>
+    <string name="developingFormula">Desenvolvendo a fórmula…:</string>
 </resources>

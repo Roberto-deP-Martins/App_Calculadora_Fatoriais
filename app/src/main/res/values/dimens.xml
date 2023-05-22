@@ -3,4 +3,5 @@
     <dimen name="name_font_size">40sp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="explanationFontSize">20sp</dimen>
+    <dimen name="layoutPadding">18dp</dimen>
 </resources>
