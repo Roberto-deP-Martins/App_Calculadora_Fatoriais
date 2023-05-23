@@ -40,21 +40,27 @@ class Explanation : Fragment() {
             else -> operationsArray[0]
         }
         binding.explanationIntro.text = getString(R.string.explanationIntro, "$operationName:")
-        binding.formulaPresentation.addView(when (args.operation) {
-            0 -> writePermutation(this.requireContext())
-            3 -> writeArranjo(this.requireContext())
-            else -> writeFormulaWithFraction(this.requireContext(), args.operation)
-        })
-        binding.formulaWithValues.addView(when (args.operation) {
-            0 -> writePermutation(this.requireContext(), args.n)
-            3 -> writeArranjo(this.requireContext(), args.n, args.k)
-            else -> writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k)
-        })
-        binding.developmentLayout.addView(when (args.operation) {
-            0 -> writePermutation(this.requireContext(), args.n, true)
-            3 -> writeArranjo(this.requireContext(), args.n, args.k)  // TODO:
-            else -> writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k)  // TODO:
-        })
+        when (args.operation) {
+            0 -> {  // Permutação
+                binding.formulaPresentation.addView(writePermutation(this.requireContext()))
+                binding.formulaWithValues.addView(writePermutation(this.requireContext(), args.n))
+                binding.developmentLayout.addView(writePermutation(this.requireContext(), args.n, true))
+            }
+            3 -> {  // Arranjo com Repetição
+                binding.formulaPresentation.addView(writeArranjoRepeticao(this.requireContext()))
+                binding.formulaWithValues.addView(writeArranjoRepeticao(this.requireContext(), args.n, args.k))
+                val developmentText = TextView(this.requireContext())
+                developmentText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
+                developmentText.text = "Ar = " + powerMultiplicationsString(args.n.toInt(), args.k.toInt())
+                developmentText.layoutParams = configureLayoutParams(this.requireContext())
+                binding.developmentLayout.addView(developmentText)
+            }
+            else -> {
+                binding.formulaPresentation.addView(writeFormulaWithFraction(this.requireContext(), args.operation))
+                binding.formulaWithValues.addView(writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k))
+                // binding.formulaWithValues.addView(writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k))  // TODO:
+            }
+        }
         return binding.root
     }
 }
@@ -63,10 +69,19 @@ class Explanation : Fragment() {
 * Retorna uma string que representa uma sequência de multiplicações que vai de rangeStart até
  * rangeEnd de forma decrescente.
 *  */
-private fun multiplicationSeriesString(rangeStart: Int, rangeEnd: Int): String {
+private fun factorialMultiplicationsString(rangeStart: Int): String {
     var seriesText = ""
-    for (i in rangeStart downTo rangeEnd) {  // Printa sequência de valores multiplicadas no fatorial
+    for (i in rangeStart downTo 1) {  // Printa sequência de valores multiplicadas no fatorial
         seriesText += if (i != 1) "$i x " else "$i"
+    }
+    return seriesText
+}
+
+private fun powerMultiplicationsString(base: Int, power: Int): String {
+    if (power == 0) return "1" else if (power > 5) return  "$base x $base x ... x $base x $base"
+    var seriesText = ""
+    for (i in power downTo 1) {  // Printa sequência de valores multiplicadas no fatorial
+        seriesText += if (i != 1) "$base x " else "$base"
     }
     return seriesText
 }
@@ -118,17 +133,17 @@ private fun writePermutation(context: Context,n: String = "n", isDeveloping:Bool
     else {  // Será executado no passo de desevolvimento
         text += "$n x "
         if (n.toInt() > 5) {  // Mostra primeiro item da sequência seguido de reticências para indicar outras multiplicações e depois a sequência
-            text = text + "${(n.toInt() - 1)} x ... x " + multiplicationSeriesString(3, 1)
+            text = text + "${(n.toInt() - 1)} x ... x " + factorialMultiplicationsString(3)
         }
         else {  // Printa sequência de valores multiplicadas no fatorial
-            text += multiplicationSeriesString(n.toInt() - 1, 1)
+            text += factorialMultiplicationsString(n.toInt() - 1)
         }
     }
     formulaParentLayout.addView(createFormulaDefTextView(context, text, 1, 1 + n.length))
     return formulaParentLayout
 }
 
-private fun writeArranjo(context: Context, n: String = "n", k: String = "k"): LinearLayout {
+private fun writeArranjoRepeticao(context: Context, n: String = "n", k: String = "k"): LinearLayout {
     val formulaParentLayout = createParentLinearLayout(context)
     formulaParentLayout.addView(createFormulaDefTextView(context, "Ar = $n$k", 5 + n.length, 5 + n.length + k.length, true))
     return formulaParentLayout
