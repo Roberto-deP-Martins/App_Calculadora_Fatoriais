@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.SpannedString
+import android.text.style.StrikethroughSpan
 import android.text.style.SubscriptSpan
 import android.text.style.SuperscriptSpan
 import android.util.TypedValue
@@ -56,9 +57,11 @@ class Explanation : Fragment() {
                 binding.developmentLayout.addView(developmentText)
             }
             else -> {
-                binding.formulaPresentation.addView(writeFormulaWithFraction(this.requireContext(), args.operation))
-                binding.formulaWithValues.addView(writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k))
-                // binding.formulaWithValues.addView(writeFormulaWithFraction(this.requireContext(), args.operation, args.n, args.k))  // TODO:
+                binding.formulaPresentation.addView(writeOperationWithFraction(this.requireContext(), args.operation))
+                binding.formulaWithValues.addView(writeOperationWithFraction(this.requireContext(), args.operation, args.n, args.k))
+                if (args.operation != 2) { binding.developmentLayout.addView(writeFraction(this.requireContext(), args.n, args.k, args.operation)) }
+                binding.developmentLayout.addView(writeFraction(this.requireContext(), args.n, args.k, args.operation, true))
+
             }
         }
         return binding.root
@@ -69,12 +72,22 @@ class Explanation : Fragment() {
 * Retorna uma string que representa uma sequência de multiplicações que vai de rangeStart até
  * rangeEnd de forma decrescente.
 *  */
-private fun factorialMultiplicationsString(rangeStart: Int): String {
+private fun factorialMultiplicationsString(rangeStart: Int, rangeEnd: Int = 1): SpannableString {
     var seriesText = ""
-    for (i in rangeStart downTo 1) {  // Printa sequência de valores multiplicadas no fatorial
-        seriesText += if (i != 1) "$i x " else "$i"
+    for (i in rangeStart downTo rangeEnd) {  // Printa sequência de valores multiplicadas no fatorial
+        if (i != rangeEnd) {
+            seriesText += "$i x "
+        }
+        else {
+            seriesText += if (rangeEnd == 1) "$i" else "$i!"
+        }
     }
-    return seriesText
+    val seriesTextString = SpannableString(seriesText)
+    if (rangeEnd != 1) {  // rangeEnd só não é um quando se usa a função para demonstrar corte do fatorial por causa de uma divisão
+        val spanStart = seriesText.indexOf(seriesText.split(" x ").last())  // Dá o índice do último número da série de multiplicações na string
+        seriesTextString.setSpan(StrikethroughSpan(), spanStart, spanStart + seriesText.split(" x ").last().length, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    return seriesTextString
 }
 
 private fun powerMultiplicationsString(base: Int, power: Int): String {
@@ -124,7 +137,16 @@ private fun createFormulaPartTextView(context: Context, text: String, background
     return textView
 }
 
-private fun writePermutation(context: Context,n: String = "n", isDeveloping:Boolean = false): LinearLayout {
+private fun createFormulaPartTextView(context: Context, text: SpannableString, background: Int? = null): TextView {
+    val textView = TextView(context)
+    textView.text = text
+    textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
+    if (background != null) textView.background = ContextCompat.getDrawable(context, background)
+    return textView
+}
+
+private fun writePermutation(context: Context,n: String = "n", isDeveloping: Boolean = false): LinearLayout {
     val formulaParentLayout = createParentLinearLayout(context)
     var text = "P$n = "
     if (!isDeveloping || !n.isDigitsOnly()) {  // Será executado antes do passo de desevolvimento da expressão
@@ -149,9 +171,9 @@ private fun writeArranjoRepeticao(context: Context, n: String = "n", k: String =
     return formulaParentLayout
 }
 
-private fun writeFormulaWithFraction(context: Context, opeationType: Int, n: String = "n", k: String = "k"): LinearLayout {
+private fun writeOperationWithFraction(context: Context, operationType: Int, n: String = "n", k: String = "k"): LinearLayout {
     val formulaParentLayout = createParentLinearLayout(context)
-    val formulaNameString = when (opeationType) {
+    val formulaNameString = when (operationType) {
         1 -> "A$n,$k = "
         2 -> "P$n,$k = "
         else -> "C$n,$k = "
@@ -161,7 +183,7 @@ private fun writeFormulaWithFraction(context: Context, opeationType: Int, n: Str
     val formulaDefLayout = LinearLayout(context)  // LinearLayout que contém o numerador e denominador da fórmula
     formulaDefLayout.orientation = LinearLayout.VERTICAL
     val numeratorTextView = createFormulaPartTextView(context, "$n!")
-    val denominatorString = when (opeationType) {
+    val denominatorString = when (operationType) {
         1 -> "($n - $k)!"
         2 -> "$k!"
         else -> "$k!($n - $k)!"
@@ -172,4 +194,69 @@ private fun writeFormulaWithFraction(context: Context, opeationType: Int, n: Str
 
     formulaParentLayout.addView(formulaDefLayout)
     return formulaParentLayout
+}
+
+private fun writeFraction(context: Context, n: String, k: String, operationType: Int, isDeveloping: Boolean = false): LinearLayout {
+    val formulaParentLayout = createParentLinearLayout(context)
+    val formulaNameString = when (operationType) {
+        1 -> "A$n,$k = "
+        2 -> "P$n,$k = "
+        else -> "C$n,$k = "
+    }
+    val formulaNameView = createFormulaDefTextView(context, formulaNameString, 1, n.length + k.length + 2)
+    formulaParentLayout.addView(formulaNameView)
+    val formulaDefLayout = LinearLayout(context)  // LinearLayout que contém o numerador e denominador da fórmula
+    formulaDefLayout.orientation = LinearLayout.VERTICAL
+    val numeratorTextView: TextView
+    val denominatortext: String
+    val denominatorTextView: TextView
+    if (!isDeveloping) {
+        numeratorTextView = createFormulaPartTextView(context, "$n!")
+        denominatortext = if (operationType == 1) "${n.toInt() - k.toInt()}!" else "$k! x ${n.toInt() - k.toInt()}!"  // Texto de arranjo ou combinação
+        denominatorTextView = createFormulaPartTextView(context, denominatortext, R.drawable.fraction_symbol)
+        formulaDefLayout.addView(numeratorTextView)
+        formulaDefLayout.addView(denominatorTextView)
+        formulaParentLayout.addView(formulaDefLayout)
+        return formulaParentLayout
+    }
+    else {
+        val rangeEnd: Int = when (operationType) {  // Valor onde string do fatorial deve acabar de acordo com operação desempenhada
+            1-> n.toInt() - k.toInt()  // Arranjo
+            2-> k.toInt()  // Permutação com Repetição
+            else -> if (k.toInt() > n.toInt() - k.toInt()) k.toInt() else (n.toInt() - k.toInt())  // Combinação
+        }
+        numeratorTextView = createFormulaPartTextView(context, factorialMultiplicationsString(n.toInt(), rangeEnd))
+        val denominatorSpannable: SpannableString
+        when (operationType) {
+            1-> {  // Arranjo
+                denominatorSpannable = SpannableString("${n.toInt() - k.toInt()}!")
+                denominatorSpannable.setSpan(StrikethroughSpan(),0, (n.toInt() - k.toInt()).toString().length + 1, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            2-> {  // Permutação com Repetição
+                denominatorSpannable = SpannableString("$k!")
+                denominatorSpannable.setSpan(StrikethroughSpan(),0, k.length + 1, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            else -> {  // Combinação
+                val denominatorSpannableText = "$k! x (${n.toInt() - k.toInt()}!)"
+                denominatorSpannable = SpannableString(denominatorSpannableText)
+                val splitText = denominatorSpannableText.split(" x ")
+                val rangeStart: Int
+                val spanRangeEnd: Int
+                if (k.toInt() > n.toInt() - k.toInt()) {
+                    rangeStart = denominatorSpannableText.indexOf(splitText[0])  // Primeiro valor da string do denominador
+                    spanRangeEnd = rangeStart + splitText[0].length
+                }
+                else  {
+                    rangeStart = denominatorSpannableText.indexOf(splitText[1])  // Segundo valor da string do denominador
+                    spanRangeEnd = rangeStart + splitText[1].length
+                }
+                denominatorSpannable.setSpan(StrikethroughSpan(),rangeStart, spanRangeEnd, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
+        denominatorTextView = createFormulaPartTextView(context, denominatorSpannable, R.drawable.fraction_symbol)
+        formulaDefLayout.addView(numeratorTextView)
+        formulaDefLayout.addView(denominatorTextView)
+        formulaParentLayout.addView(formulaDefLayout)
+        return formulaParentLayout
+    }
 }
