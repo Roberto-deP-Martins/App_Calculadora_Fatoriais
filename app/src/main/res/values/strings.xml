@@ -18,4 +18,5 @@
     <string name="explanationIntro">Primeiro escreve-se a fórmula de %1$s</string>
     <string name="explanationValuesStep">Então, adicionam-se os valores:</string>
     <string name="developingFormula">Desenvolvendo a fórmula…:</string>
+    <string name="presentingResult">Que resulta em:</string>
 </resources>
