@@ -117,6 +117,10 @@ class Calculadora : Fragment() {
             }
             else {
                 Toast.makeText(context, this.getString(R.string.integerOverflow), Toast.LENGTH_LONG).show() }  // Overflow
-            }
         }
+    }
+
+    fun eraseExplanationButton() {
+        binding.explanationButton.visibility = View.INVISIBLE
+    }
 }

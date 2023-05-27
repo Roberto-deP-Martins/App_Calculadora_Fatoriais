@@ -62,6 +62,8 @@ class Combinacao : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
             override fun afterTextChanged(s: Editable?) {
+                val parentFragment: Calculadora = this@Combinacao.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
                 if (affectedView.text.toString() != listenedView.text.toString()) {
                     affectedView.text = listenedView.text
                     if (mathVariable == 'n') {

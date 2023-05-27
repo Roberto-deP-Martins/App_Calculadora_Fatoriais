@@ -54,7 +54,8 @@ class Arranjo : Fragment() {
                 }
                 val k = binding.kDenominatorEditView.text.toString()
                 sharedViewModel.k = k.toIntOrNull()
-                Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
+                val parentFragment: Calculadora = this@Arranjo.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
                 writeFormula(n, k, n.length, k.length)
             }
         })
@@ -100,7 +101,8 @@ class Arranjo : Fragment() {
                     val n = binding.nDenominatorEditView.text.toString()
                     sharedViewModel.n = n.toIntOrNull()
                     writeFormula(n, k, n.length, k.length)
-                    Log.d(TAG, "viewmodel: n ${sharedViewModel.n} e k ${sharedViewModel.k}")
+                    val parentFragment: Calculadora = this@Arranjo.parentFragment as Calculadora
+                    parentFragment.eraseExplanationButton()
                 }
             }
         })

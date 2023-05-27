@@ -47,6 +47,8 @@ class ArranjoRepeticao : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
+                val parentFragment: Calculadora = this@ArranjoRepeticao.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
                 sharedViewModel.n = s.toString().toIntOrNull()
             }
         })
@@ -58,7 +60,8 @@ class ArranjoRepeticao : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 sharedViewModel.k = s.toString().toIntOrNull()
-                Log.d(TAG, "k ${sharedViewModel.k}")
+                val parentFragment: Calculadora = this@ArranjoRepeticao.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
             }
         })
 

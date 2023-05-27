@@ -8,13 +8,12 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.SubscriptSpan
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.calculadorafatoriais.databinding.FragmentPermutacaoBinding
 
@@ -41,6 +40,8 @@ class Permutacao : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && s.length in 2..4) { binding.valorEditText.setEms(s.length) }
                 sharedViewModel.n = s.toString().toIntOrNull()
+                val parentFragment: Calculadora = this@Permutacao.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
             }
 
         })

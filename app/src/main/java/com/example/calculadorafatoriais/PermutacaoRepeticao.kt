@@ -44,6 +44,8 @@ class PermutacaoRepeticao : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
+                val parentFragment: Calculadora = this@PermutacaoRepeticao.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
                 sharedViewModel.n = s.toString().toIntOrNull()
                 val k = binding.denominatorPermutationRepetition.text.toString()
                 writeFormula(s.toString(), k, s.toString().length, k.length)
@@ -55,7 +57,10 @@ class PermutacaoRepeticao : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-            override fun afterTextChanged(s: Editable?) {
+            override fun afterTextChanged(s: Editable?)
+            {
+                val parentFragment: Calculadora = this@PermutacaoRepeticao.parentFragment as Calculadora
+                parentFragment.eraseExplanationButton()
                 sharedViewModel.k = s.toString().toIntOrNull()
                 val n = binding.numeratorPermutationRepetition.text.toString()
                 writeFormula(n, s.toString(), n.length, s.toString().length)
