@@ -16,10 +16,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import com.example.calculadorafatoriais.databinding.FragmentExplanationBinding
+import com.example.calculadorafatoriais.explanationWidgets.*
 
 
 class Explanation : Fragment() {
@@ -63,7 +63,7 @@ class Explanation : Fragment() {
                 if (args.operation != 2) { binding.developmentLayout.addView(writeFraction(this.requireContext(), args.n, args.k, args.operation)) }
                 binding.developmentLayout.addView(writeFraction(this.requireContext(), args.n, args.k, args.operation, true))
                 if (args.operation == 4) {
-                    val finalDevelopmentLayout = createParentLinearLayout(this.requireContext())
+                    val finalDevelopmentLayout = ParentLinearLayout(this.requireContext())
                     finalDevelopmentLayout.addView(createFormulaDefTextView(this.requireContext(), args.n, args.k, 4))
                     val fractionLayout = LinearLayout(this.requireContext())
                     fractionLayout.orientation = LinearLayout.VERTICAL
@@ -77,8 +77,8 @@ class Explanation : Fragment() {
                         numeratorRangeEnd = (args.n.toInt()-args.k.toInt())
                         denominatorRangeStart = args.k.toInt()
                     }
-                    val numeratorTextView = createFormulaPartTextView(this.requireContext(), permutacao(args.n.toInt(), numeratorRangeEnd).toString())
-                    val denominatorTextView = createFormulaPartTextView(this.requireContext(), permutacao(denominatorRangeStart).toString(), R.drawable.fraction_symbol)
+                    val numeratorTextView = DivisionPartTextView(this.requireContext(), permutacao(args.n.toInt(), numeratorRangeEnd).toString())
+                    val denominatorTextView = DivisionPartTextView(this.requireContext(), permutacao(denominatorRangeStart).toString(), R.drawable.fraction_symbol)
                     fractionLayout.addView(numeratorTextView)
                     fractionLayout.addView(denominatorTextView)
                     finalDevelopmentLayout.addView(fractionLayout)
@@ -143,13 +143,6 @@ class Explanation : Fragment() {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, size, r.displayMetrics).toInt()
     }
 
-    private fun createParentLinearLayout(context: Context): LinearLayout {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.HORIZONTAL
-        linearLayout.layoutParams = configureLayoutParams(context)
-        return linearLayout
-    }
-
     private fun configureLayoutParams(context: Context): ActionBar.LayoutParams {  // Configura margem do LinearLayout
         val params = ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT)
         params.setMargins(dpToPx(context, 20F), dpToPx(context, 25F), 0, 0)
@@ -189,57 +182,39 @@ class Explanation : Fragment() {
         return textView
     }
 
-    private fun createFormulaPartTextView(context: Context, text: String, background: Int? = null): TextView {
-        val textView = TextView(context)
-        textView.text = text
-        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
-        if (background != null) textView.background = ContextCompat.getDrawable(context, background)
-        return textView
-    }
-
-    private fun createFormulaPartTextView(context: Context, text: SpannableString, background: Int? = null): TextView {
-        val textView = TextView(context)
-        textView.text = text
-        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
-        if (background != null) textView.background = ContextCompat.getDrawable(context, background)
-        return textView
-    }
-
     private fun writePermutation(context: Context,n: String = "n", isDeveloping: Boolean = false): LinearLayout {
-        val formulaParentLayout = createParentLinearLayout(context)
+        val formulaParentLayout = ParentLinearLayout(context)
         val formulaDefTextView = createFormulaDefTextView(context, n, operationType = 0)
         val formulaText = if (!isDeveloping || !n.isDigitsOnly()) "$n!" else factorialMultiplicationsString(n.toInt())
-        val formulaValuesTextView = createFormulaPartTextView(context, formulaText.toString())
+        val formulaValuesTextView = DivisionPartTextView(context, formulaText.toString())
         formulaParentLayout.addView(formulaDefTextView)
         formulaParentLayout.addView(formulaValuesTextView)
         return formulaParentLayout
     }
 
     private fun writeArranjoRepeticao(context: Context, n: String = "n", k: String = "k"): LinearLayout {
-        val formulaParentLayout = createParentLinearLayout(context)
+        val formulaParentLayout = ParentLinearLayout(context)
         val formulaPartString = SpannableString("$n$k")
         formulaPartString.setSpan(SuperscriptSpan(), n.length, n.length + k.length, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
-        val formulaPartTextView = createFormulaPartTextView(context,formulaPartString)
+        val formulaPartTextView = DivisionPartTextView(context,formulaPartString)
         formulaParentLayout.addView(createFormulaDefTextView(context, n, k, 3))
         formulaParentLayout.addView(formulaPartTextView)
         return formulaParentLayout
     }
 
     private fun writeOperationWithFraction(context: Context, operationType: Int, n: String = "n", k: String = "k"): LinearLayout {
-        val formulaParentLayout = createParentLinearLayout(context)
+        val formulaParentLayout = ParentLinearLayout(context)
         val formulaNameView = createFormulaDefTextView(context, n, k, operationType)
         formulaParentLayout.addView(formulaNameView)
         val formulaDefLayout = LinearLayout(context)  // LinearLayout que contém o numerador e denominador da fórmula
         formulaDefLayout.orientation = LinearLayout.VERTICAL
-        val numeratorTextView = createFormulaPartTextView(context, "$n!")
+        val numeratorTextView = DivisionPartTextView(context, "$n!")
         val denominatorString = when (operationType) {
             1 -> "($n - $k)!"
             2 -> "$k!"
             else -> "$k!($n - $k)!"
         }
-        val denominatorTextView = createFormulaPartTextView(context, denominatorString, R.drawable.fraction_symbol)
+        val denominatorTextView = DivisionPartTextView(context, denominatorString, R.drawable.fraction_symbol)
         formulaDefLayout.addView(numeratorTextView)
         formulaDefLayout.addView(denominatorTextView)
 
@@ -248,7 +223,7 @@ class Explanation : Fragment() {
     }
 
     private fun writeFraction(context: Context, n: String, k: String, operationType: Int, isDeveloping: Boolean = false): LinearLayout {
-        val formulaParentLayout = createParentLinearLayout(context)
+        val formulaParentLayout = ParentLinearLayout(context)
         val formulaNameView = createFormulaDefTextView(context, n, k, operationType)
         formulaParentLayout.addView(formulaNameView)
         val formulaDefLayout = LinearLayout(context)  // LinearLayout que contém o numerador e denominador da fórmula
@@ -257,9 +232,9 @@ class Explanation : Fragment() {
         val denominatortext: String
         val denominatorTextView: TextView
         if (!isDeveloping) {
-            numeratorTextView = createFormulaPartTextView(context, "$n!")
+            numeratorTextView = DivisionPartTextView(context, "$n!")
             denominatortext = if (operationType == 1) "${n.toInt() - k.toInt()}!" else "$k! x ${n.toInt() - k.toInt()}!"  // Texto de arranjo ou combinação
-            denominatorTextView = createFormulaPartTextView(context, denominatortext, R.drawable.fraction_symbol)
+            denominatorTextView = DivisionPartTextView(context, denominatortext, R.drawable.fraction_symbol)
             formulaDefLayout.addView(numeratorTextView)
             formulaDefLayout.addView(denominatorTextView)
             formulaParentLayout.addView(formulaDefLayout)
@@ -271,7 +246,7 @@ class Explanation : Fragment() {
                 2-> k.toInt()  // Permutação com Repetição
                 else -> if (k.toInt() > n.toInt() - k.toInt()) k.toInt() else (n.toInt() - k.toInt())  // Combinação
             }
-            numeratorTextView = createFormulaPartTextView(context, factorialMultiplicationsString(n.toInt(), rangeEnd, true))
+            numeratorTextView = DivisionPartTextView(context, factorialMultiplicationsString(n.toInt(), rangeEnd, true))
             val denominatorSpannable: SpannableString
             when (operationType) {
                 1-> {  // Arranjo
@@ -300,7 +275,7 @@ class Explanation : Fragment() {
                     denominatorSpannable.setSpan(StrikethroughSpan(),rangeStart, spanRangeEnd, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             }
-            denominatorTextView = createFormulaPartTextView(context, denominatorSpannable, R.drawable.fraction_symbol)
+            denominatorTextView = DivisionPartTextView(context, denominatorSpannable, R.drawable.fraction_symbol)
             formulaDefLayout.addView(numeratorTextView)
             formulaDefLayout.addView(denominatorTextView)
             formulaParentLayout.addView(formulaDefLayout)
@@ -309,9 +284,9 @@ class Explanation : Fragment() {
     }
 
     private fun presentResult(n: String, k: String, result: String, operationType: Int) : LinearLayout {
-        val parentLinearLayout = createParentLinearLayout(this@Explanation.requireContext())
+        val parentLinearLayout = ParentLinearLayout(this@Explanation.requireContext())
         val formulaDef = createFormulaDefTextView(this@Explanation.requireContext() ,n, k, operationType)
-        val resultTextView = createFormulaPartTextView(this@Explanation.requireContext() ,result)
+        val resultTextView = DivisionPartTextView(this@Explanation.requireContext() ,result)
         parentLinearLayout.addView(formulaDef)
         parentLinearLayout.addView(resultTextView)
         return parentLinearLayout
