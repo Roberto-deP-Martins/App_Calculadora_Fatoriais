@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.TypedValue
 import android.widget.LinearLayout
 
+/** Layout usado como Layout Pai para fórmulas de Análise Combinatória. Define seus parâmetros de
+ * layout e margens em seu construtor. */
 class ParentLinearLayout(context: Context) : LinearLayout(context) {
     init {
         // Configurando parametros para layout da classe

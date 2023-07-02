@@ -6,6 +6,8 @@ import android.text.SpannedString
 import android.text.style.SubscriptSpan
 import android.util.TypedValue
 
+/** TextView que inicializa com a notação de uma fórmula de Análise Combinatória, com
+ * SpannableString. */
 class FormulaDefinitionTextView(context: Context, n: String = "n", k: String = "k", operationValue: Int):
     androidx.appcompat.widget.AppCompatTextView(context) {
     init {

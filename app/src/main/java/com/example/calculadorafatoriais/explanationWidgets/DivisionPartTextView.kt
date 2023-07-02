@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.View
 import androidx.core.content.ContextCompat
 
+/** TextView que representa parte da divisão, numerador ou divisor.  */
 class DivisionPartTextView: androidx.appcompat.widget.AppCompatTextView {
 
     constructor(context: Context, _text: String, _background: Int? = null) : super(context) {
