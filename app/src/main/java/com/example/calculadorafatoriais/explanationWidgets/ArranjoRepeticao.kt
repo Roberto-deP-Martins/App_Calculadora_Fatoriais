@@ -6,7 +6,7 @@ import android.text.SpannedString
 import android.text.style.SuperscriptSpan
 import android.widget.LinearLayout
 
-class ArranjoRepeticao(context: Context, n: String = "n", k: String = "k") : LinearLayout(context) {
+class ArranjoRepeticao(context: Context, n: String = "n", k: String = "k") : ParentLinearLayout(context) {
     init {
         val formulaPartString = SpannableString("$n$k")
         formulaPartString.setSpan(SuperscriptSpan(), n.length, n.length + k.length, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
