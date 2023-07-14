@@ -1,10 +1,6 @@
 package com.example.calculadorafatoriais
 
-import android.content.Context
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.SpannedString
-import android.text.style.SuperscriptSpan
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -44,8 +40,8 @@ class Explanation : Fragment(), Factorial, SetLayoutParams {
                 binding.developmentLayout.addView(PermutationLayout(this.requireContext(), args.n, true))
             }
             3 -> {  // Arranjo com Repetição
-                binding.formulaPresentation.addView(writeArranjoRepeticao(this.requireContext()))
-                binding.formulaWithValues.addView(writeArranjoRepeticao(this.requireContext(), args.n, args.k))
+                binding.formulaPresentation.addView(ArranjoRepeticao(this.requireContext()))
+                binding.formulaWithValues.addView(ArranjoRepeticao(this.requireContext(), args.n, args.k))
                 val developmentText = TextView(this.requireContext())
                 developmentText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
                 developmentText.text = "Ar = " + powerMultiplicationsString(args.n.toInt(), args.k.toInt())
@@ -93,16 +89,6 @@ class Explanation : Fragment(), Factorial, SetLayoutParams {
             seriesText += if (i != 1) "$base x " else "$base"
         }
         return seriesText
-    }
-
-    private fun writeArranjoRepeticao(context: Context, n: String = "n", k: String = "k"): LinearLayout {
-        val formulaParentLayout = ParentLinearLayout(context)
-        val formulaPartString = SpannableString("$n$k")
-        formulaPartString.setSpan(SuperscriptSpan(), n.length, n.length + k.length, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
-        val formulaPartTextView = DivisionPartTextView(context,formulaPartString)
-        formulaParentLayout.addView(FormulaDefinitionTextView(context, n, k, 3))
-        formulaParentLayout.addView(formulaPartTextView)
-        return formulaParentLayout
     }
 
     private fun presentResult(n: String, k: String, result: String, operationType: Int) : LinearLayout {
